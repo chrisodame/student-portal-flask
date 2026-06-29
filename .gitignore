@@ -5,4 +5,4 @@ instance/
 .env
 student.db
 uploads/
-.vscode/
+.vscode/git
