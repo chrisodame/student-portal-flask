@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="card shadow">
+
+<div class="card-body">
+
+<h2>Welcome, {{ current_user.first_name }}!</h2>
+
+<p>You have successfully logged in.</p>
+
+<a href="/logout" class="btn btn-danger">
+Logout
+</a>
+
+</div>
+
+</div>
+
+{% endblock %}

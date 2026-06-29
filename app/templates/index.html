@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}Student Main Portal{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+    <div class="text-center">
+
+        <h1 class="display-4 fw-bold text-primary">
+            Student Main Portal
+        </h1>
+
+        <p class="lead">
+            Welcome to the Student Management System.
+        </p>
+
+        <a href="{{ url_for('main.add_student') }}"
+           class="btn btn-primary btn-lg mt-3">
+            Register Student
+        </a>
+
+    </div>
+
+    <hr class="my-5">
+
+    <div class="row">
+
+        <div class="col-md-4">
+
+            <div class="card shadow">
+
+                <div class="card-body text-center">
+
+                    <h3>📝</h3>
+
+                    <h5>Student Registration</h5>
+
+                    <p>
+                        Register new students into the system.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="card shadow">
+
+                <div class="card-body text-center">
+
+                    <h3>📋</h3>
+
+                    <h5>Student Records</h5>
+
+                    <p>
+                        View all registered students.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="card shadow">
+
+                <div class="card-body text-center">
+
+                    <h3>🔍</h3>
+
+                    <h5>Search Students</h5>
+
+                    <p>
+                        Quickly search student information.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
