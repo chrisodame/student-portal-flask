@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, flash
+from flask import Blueprint, render_template, redirect, url_for, flash, request
 from .models import Student
 from .forms import StudentForm
 from . import db
@@ -13,9 +13,63 @@ def home():
 
 @main.route("/students")
 def students():
-    student_list = Student.query.order_by(Student.created_at.desc()).all()
-    return render_template("students.html", students=student_list)
+    search = request.args.get("search", "").strip()
 
+    query = Student.query
+
+    if search:
+        search_pattern = f"%{search}%"
+
+        query = query.filter(
+            (Student.student_number.ilike(search_pattern))
+            | (Student.first_name.ilike(search_pattern))
+            | (Student.last_name.ilike(search_pattern))
+            | (Student.email.ilike(search_pattern))
+        )
+
+    student_list = query.order_by(
+        Student.created_at.desc()
+    ).all()
+
+    return render_template(
+        "students.html",
+        students=student_list,
+        search=search
+    )
+
+@main.route("/students/<int:id>")
+def student_details(id):
+    student = Student.query.get_or_404(id)
+    return render_template("student_details.html", student=student)
+
+@main.route("/students/edit/<int:id>", methods=["GET", "POST"])
+def edit_student(id):
+    student = Student.query.get_or_404(id)
+    form = StudentForm(obj=student)
+
+    if form.validate_on_submit():
+        form.populate_obj(student)
+
+        db.session.commit()
+
+        flash("Student updated successfully!", "success")
+        return redirect(url_for("main.students"))
+
+    return render_template(
+        "edit_student.html",
+        form=form,
+        student=student
+    )
+
+@main.route("/students/delete/<int:id>", methods=["POST"])
+def delete_student(id):
+    student = Student.query.get_or_404(id)
+
+    db.session.delete(student)
+    db.session.commit()
+
+    flash("Student deleted successfully!", "success")
+    return redirect(url_for("main.students"))    
 
 @main.route("/students/add", methods=["GET", "POST"])
 def add_student():
