@@ -23,6 +23,15 @@ def add_student():
 
     if form.validate_on_submit():
 
+        existing_student = Student.query.filter(
+            (Student.student_number == form.student_number.data)
+            | (Student.email == form.email.data)
+        ).first()
+
+        if existing_student:
+            flash("Student Number or Email already exists.", "danger")
+            return redirect(url_for("main.add_student"))
+
         student = Student(
             student_number=form.student_number.data,
             first_name=form.first_name.data,
@@ -35,14 +44,13 @@ def add_student():
             course=form.course.data,
             level=form.level.data,
             guardian_name=form.guardian_name.data,
-            guardian_phone=form.guardian_phone.data
+            guardian_phone=form.guardian_phone.data,
         )
 
         db.session.add(student)
         db.session.commit()
 
         flash("Student registered successfully!", "success")
-
         return redirect(url_for("main.students"))
 
     return render_template("add_student.html", form=form)
