@@ -14,6 +14,27 @@
 
         <div class="card-body">
 
+        <div class="text-center mb-4">
+
+            {% if student.photo %}
+
+            <img
+            src="{{ url_for('static', filename='uploads/' + student.photo) }}"
+            class="img-thumbnail"
+            width="180"
+            alt="Student Photo">
+
+            {% else %}
+
+            <img
+            src="https://via.placeholder.com/180x180?text=No+Photo"
+            class="img-thumbnail"
+            alt="No Photo">
+
+            {% endif %}
+
+        </div>
+
             <table class="table table-bordered">
 
                 <tr>

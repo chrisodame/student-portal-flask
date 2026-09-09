@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Student ID Card{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+
+    <div class="col-md-5">
+
+        <div class="card shadow text-center">
+
+            <div class="card-header bg-primary text-white">
+
+                <h4>Student ID Card</h4>
+
+            </div>
+
+            <div class="card-body">
+
+                {% if student.photo %}
+
+                <img
+                    src="{{ url_for('static', filename='uploads/' + student.photo) }}"
+                    width="150"
+                    height="150"
+                    class="rounded-circle mb-3">
+
+                {% endif %}
+
+                <h3>
+
+                    {{ student.first_name }}
+                    {{ student.last_name }}
+
+                </h3>
+
+                <hr>
+
+                <p>
+
+                    <strong>Student Number:</strong><br>
+
+                    {{ student.student_number }}
+
+                </p>
+
+                <p>
+
+                    <strong>Course</strong><br>
+
+                    {{ student.course }}
+
+                </p>
+
+                <p>
+
+                    <strong>Level</strong><br>
+
+                    {{ student.level }}
+
+                </p>
+
+                <a
+                    onclick="window.print()"
+                    class="btn btn-success">
+
+                    Print ID Card
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -4,9 +4,7 @@
 
 {% block content %}
 
-<div class="container mt-5">
-
-   <div class="d-flex justify-content-between align-items-center mb-4">
+<div class="d-flex justify-content-between align-items-center mb-4">
 
     <h2>Registered Students</h2>
 
@@ -23,47 +21,54 @@
 
     <div class="input-group">
 
-        <input
-            type="text"
-            name="search"
-            class="form-control"
-            placeholder="Search by student number, name or email..."
-            value="{{ search }}"
-        >
+        <input type="text"
+               class="form-control"
+               name="search"
+               placeholder="Search students..."
+               value="{{ search }}">
 
-        <button type="submit" class="btn btn-primary">
+        <button class="btn btn-primary">
             Search
         </button>
 
         {% if search %}
-            <a href="{{ url_for('main.students') }}"
-               class="btn btn-secondary">
-                Clear
-            </a>
+
+        <a href="{{ url_for('main.students') }}"
+           class="btn btn-secondary">
+
+            Clear
+
+        </a>
+
         {% endif %}
 
     </div>
 
 </form>
 
-    {% if students %}
+<div class="card shadow">
 
-    <div class="table-responsive">
+    <div class="card-body">
 
-        <table class="table table-bordered table-hover align-middle">
+        <table class="table table-hover align-middle">
 
-            <thead class="table-primary">
+            <thead class="table-dark">
 
-                <tr>
-                    <th>Student No.</th>
-                    <th>Name</th>
-                    <th>Gender</th>
-                    <th>Course</th>
-                    <th>Level</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th>Actions</th>
-                </tr>
+            <tr>
+
+                <th>Photo</th>
+
+                <th>Student No.</th>
+
+                <th>Name</th>
+
+                <th>Course</th>
+
+                <th>Level</th>
+
+                <th>Actions</th>
+
+            </tr>
 
             </thead>
 
@@ -71,51 +76,89 @@
 
             {% for student in students %}
 
-                <tr>
+            <tr>
 
-                    <td>{{ student.student_number }}</td>
+                <td>
 
-                    <td>{{ student.first_name }} {{ student.last_name }}</td>
+                    {% if student.photo %}
 
-                    <td>{{ student.gender }}</td>
+                    <img
+                        src="{{ url_for('static', filename='uploads/' + student.photo) }}"
+                        width="60"
+                        height="60"
+                        class="rounded-circle">
 
-                    <td>{{ student.course }}</td>
+                    {% else %}
 
-                    <td>{{ student.level }}</td>
+                    <img
+                        src="https://via.placeholder.com/60"
+                        class="rounded-circle">
 
-                    <td>{{ student.email }}</td>
+                    {% endif %}
 
-                    <td>{{ student.phone }}</td>
+                </td>
 
-                    <td>
+                <td>{{ student.student_number }}</td>
 
-                        <a href="{{ url_for('main.student_details', id=student.id) }}"
-                            class="btn btn-sm btn-info">
-                            View
-                        </a>
+                <td>{{ student.first_name }} {{ student.last_name }}</td>
 
-                        <a href="{{ url_for('main.edit_student', id=student.id) }}"
-                            class="btn btn-sm btn-warning">
-                            Edit
-                        </a>
+                <td>{{ student.course }}</td>
 
-                       <form action="{{ url_for('main.delete_student', id=student.id) }}"
-                            method="POST" 
-                            style="display:inline;">
+                <td>{{ student.level }}</td>
+
+                <td>
+
+                    <a href="{{ url_for('main.student_details', id=student.id) }}"
+                       class="btn btn-sm btn-info">
+
+                        View
+
+                    </a>
+
+                    <a href="{{ url_for('main.edit_student', id=student.id) }}"
+                       class="btn btn-sm btn-warning">
+
+                        Edit
+
+                    </a>
+
+                    <a href="{{ url_for('main.student_id_card', id=student.id) }}"
+                       class="btn btn-sm btn-secondary">
+
+                        ID Card
+
+                    </a>
+
+                    <form action="{{ url_for('main.delete_student', id=student.id) }}"
+                          method="POST"
+                          style="display:inline;">
+
                         <button
-                            type="submit"
                             class="btn btn-sm btn-danger"
-                            onclick="return confirm('Are you sure you want to delete this student?');">
+                            onclick="return confirm('Delete this student?')">
 
-                             Delete
+                            Delete
 
                         </button>
 
-                        </form>
+                    </form>
 
-                    </td>
+                </td>
 
-                </tr>
+            </tr>
+
+            {% else %}
+
+            <tr>
+
+                <td colspan="6"
+                    class="text-center">
+
+                    No students found.
+
+                </td>
+
+            </tr>
 
             {% endfor %}
 
@@ -124,16 +167,6 @@
         </table>
 
     </div>
-
-    {% else %}
-
-    <div class="alert alert-info text-center">
-
-        No students have been registered yet.
-
-    </div>
-
-    {% endif %}
 
 </div>
 
