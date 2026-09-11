@@ -38,6 +38,10 @@ def home():
         recent_students=recent_students,
     )
 
+@main.route("/about")
+def about():
+    return render_template("about.html")
+
 @main.route("/students")
 def students():
     search = request.args.get("search", "").strip()
