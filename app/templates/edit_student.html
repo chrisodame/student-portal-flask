@@ -4,96 +4,295 @@
 
 {% block content %}
 
-<div class="container mt-5">
+<div class="container mt-4 mb-5">
+
+    <!-- Page Header -->
+    <div class="mb-4">
+
+        <h2 class="fw-bold mb-1">
+            Edit Student
+        </h2>
+
+        <p class="text-muted mb-0">
+            Update the student's information below.
+        </p>
+
+    </div>
+
 
     <div class="card shadow">
 
-        <div class="card-header bg-primary text-white">
-            <h3>Edit Student</h3>
+        <!-- Form Header -->
+        <div class="card-header bg-primary text-white p-4">
+
+            <h4 class="mb-1">
+                Update Student Information
+            </h4>
+
+            <small>
+                Make the necessary changes and save the updated record.
+            </small>
+
         </div>
 
-        <div class="card-body">
+
+        <div class="card-body p-4">
 
             <form method="POST" enctype="multipart/form-data">
 
                 {{ form.hidden_tag() }}
 
+
+                <!-- Personal Information -->
+                <h5 class="fw-bold mb-3">
+                    Personal Information
+                </h5>
+
                 <div class="row">
 
                     <div class="col-md-6 mb-3">
-                        {{ form.student_number.label(class="form-label") }}
-                        {{ form.student_number(class="form-control") }}
+
+                        {{ form.student_number.label(class="form-label fw-semibold") }}
+
+                        {{ form.student_number(
+                            class="form-control",
+                            placeholder="Enter student number"
+                        ) }}
+
                     </div>
 
-                    <div class="col-md-6 mb-3">
-                        {{ form.email.label(class="form-label") }}
-                        {{ form.email(class="form-control") }}
-                    </div>
 
                     <div class="col-md-6 mb-3">
-                        {{ form.first_name.label(class="form-label") }}
-                        {{ form.first_name(class="form-control") }}
+
+                        {{ form.first_name.label(class="form-label fw-semibold") }}
+
+                        {{ form.first_name(
+                            class="form-control",
+                            placeholder="Enter first name"
+                        ) }}
+
                     </div>
 
-                    <div class="col-md-6 mb-3">
-                        {{ form.last_name.label(class="form-label") }}
-                        {{ form.last_name(class="form-control") }}
-                    </div>
 
                     <div class="col-md-6 mb-3">
-                        {{ form.gender.label(class="form-label") }}
+
+                        {{ form.last_name.label(class="form-label fw-semibold") }}
+
+                        {{ form.last_name(
+                            class="form-control",
+                            placeholder="Enter last name"
+                        ) }}
+
+                    </div>
+
+
+                    <div class="col-md-6 mb-3">
+
+                        {{ form.gender.label(class="form-label fw-semibold") }}
+
                         {{ form.gender(class="form-select") }}
+
                     </div>
+
 
                     <div class="col-md-6 mb-3">
-                        {{ form.date_of_birth.label(class="form-label") }}
-                        {{ form.date_of_birth(class="form-control") }}
-                    </div>
 
-                    <div class="col-md-6 mb-3">
-                        {{ form.phone.label(class="form-label") }}
-                        {{ form.phone(class="form-control") }}
-                    </div>
+                        {{ form.date_of_birth.label(class="form-label fw-semibold") }}
 
-                    <div class="col-md-6 mb-3">
-                        {{ form.course.label(class="form-label") }}
-                        {{ form.course(class="form-control") }}
-                    </div>
+                        {{ form.date_of_birth(
+                            class="form-control"
+                        ) }}
 
-                    <div class="col-md-6 mb-3">
-                        {{ form.level.label(class="form-label") }}
-                        {{ form.level(class="form-select") }}
-                    </div>
-
-                    <div class="col-md-6 mb-3">
-                        {{ form.guardian_name.label(class="form-label") }}
-                        {{ form.guardian_name(class="form-control") }}
-                    </div>
-
-                    <div class="col-md-6 mb-3">
-                        {{ form.guardian_phone.label(class="form-label") }}
-                        {{ form.guardian_phone(class="form-control") }}
-                    </div>
-
-                    <div class="col-md-6 mb-3">
-                        {{ form.photo.label(class="form-label") }}
-                        {{ form.photo(class="form-control") }}
-                    </div>
-
-                    <div class="col-12 mb-3">
-                        {{ form.address.label(class="form-label") }}
-                        {{ form.address(class="form-control", rows="3") }}
                     </div>
 
                 </div>
 
-                <button type="submit" class="btn btn-success">
-                    Update Student
-                </button>
 
-                <a href="{{ url_for('main.students') }}" class="btn btn-secondary">
-                    Cancel
-                </a>
+                <hr class="my-4">
+
+
+                <!-- Contact Information -->
+                <h5 class="fw-bold mb-3">
+                    Contact Information
+                </h5>
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+
+                        {{ form.email.label(class="form-label fw-semibold") }}
+
+                        {{ form.email(
+                            class="form-control",
+                            placeholder="student@example.com"
+                        ) }}
+
+                    </div>
+
+
+                    <div class="col-md-6 mb-3">
+
+                        {{ form.phone.label(class="form-label fw-semibold") }}
+
+                        {{ form.phone(
+                            class="form-control",
+                            placeholder="Enter phone number"
+                        ) }}
+
+                    </div>
+
+
+                    <div class="col-12 mb-3">
+
+                        {{ form.address.label(class="form-label fw-semibold") }}
+
+                        {{ form.address(
+                            class="form-control",
+                            rows="3",
+                            placeholder="Enter residential address"
+                        ) }}
+
+                    </div>
+
+                </div>
+
+
+                <hr class="my-4">
+
+
+                <!-- Academic Information -->
+                <h5 class="fw-bold mb-3">
+                    Academic Information
+                </h5>
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+
+                        {{ form.course.label(class="form-label fw-semibold") }}
+
+                        {{ form.course(
+                            class="form-control",
+                            placeholder="Enter course"
+                        ) }}
+
+                    </div>
+
+
+                    <div class="col-md-6 mb-3">
+
+                        {{ form.level.label(class="form-label fw-semibold") }}
+
+                        {{ form.level(class="form-select") }}
+
+                    </div>
+
+                </div>
+
+
+                <hr class="my-4">
+
+
+                <!-- Guardian Information -->
+                <h5 class="fw-bold mb-3">
+                    Guardian Information
+                </h5>
+
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+
+                        {{ form.guardian_name.label(class="form-label fw-semibold") }}
+
+                        {{ form.guardian_name(
+                            class="form-control",
+                            placeholder="Enter guardian name"
+                        ) }}
+
+                    </div>
+
+
+                    <div class="col-md-6 mb-3">
+
+                        {{ form.guardian_phone.label(class="form-label fw-semibold") }}
+
+                        {{ form.guardian_phone(
+                            class="form-control",
+                            placeholder="Enter guardian phone"
+                        ) }}
+
+                    </div>
+
+                </div>
+
+
+                <hr class="my-4">
+
+
+                <!-- Student Photo -->
+                <h5 class="fw-bold mb-3">
+                    Student Photo
+                </h5>
+
+                {% if student.photo %}
+
+                <div class="mb-3">
+
+                    <p class="text-muted mb-2">
+                        Current Photo
+                    </p>
+
+                    <img
+                        src="{{ url_for('static', filename='uploads/' + student.photo) }}"
+                        width="120"
+                        height="120"
+                        class="rounded-circle border"
+                        style="object-fit: cover;"
+                        alt="Current Student Photo">
+
+                </div>
+
+                {% endif %}
+
+
+                <div class="mb-4">
+
+                    {{ form.photo.label(class="form-label fw-semibold") }}
+
+                    {{ form.photo(
+                        class="form-control",
+                        accept=".jpg,.jpeg,.png"
+                    ) }}
+
+                    <div class="form-text">
+                        Select a new photo only if you want to replace the current one.
+                        Accepted formats: JPG, JPEG and PNG.
+                    </div>
+
+                </div>
+
+
+                <!-- Form Actions -->
+                <div class="border-top pt-4 mt-4">
+
+                    <button
+                        type="submit"
+                        class="btn btn-success px-4">
+
+                        Update Student
+
+                    </button>
+
+
+                    <a
+                        href="{{ url_for('main.students') }}"
+                        class="btn btn-secondary px-4 ms-2">
+
+                        Cancel
+
+                    </a>
+
+                </div>
 
             </form>
 

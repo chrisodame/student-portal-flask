@@ -4,74 +4,287 @@
 
 {% block content %}
 
-<div class="row justify-content-center">
+<style>
 
-    <div class="col-md-5">
+    .id-card-wrapper {
+        display: flex;
+        justify-content: center;
+        margin-top: 30px;
+        margin-bottom: 50px;
+    }
 
-        <div class="card shadow text-center">
+    .student-id-card {
+        width: 360px;
+        min-height: 500px;
+        border-radius: 18px;
+        overflow: hidden;
+        background: white;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        border: 1px solid #ddd;
+    }
 
-            <div class="card-header bg-primary text-white">
+    .id-header {
+        background: #0d6efd;
+        color: white;
+        text-align: center;
+        padding: 20px;
+    }
 
-                <h4>Student ID Card</h4>
+    .id-header h4 {
+        margin: 0;
+        font-weight: bold;
+    }
+
+    .id-header small {
+        display: block;
+        margin-top: 5px;
+    }
+
+    .id-body {
+        text-align: center;
+        padding: 25px;
+    }
+
+    .student-photo {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 5px solid #0d6efd;
+        margin-bottom: 15px;
+    }
+
+    .photo-placeholder {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        background: #6c757d;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 15px;
+        font-size: 42px;
+        font-weight: bold;
+    }
+
+    .student-name {
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .student-number {
+        color: #6c757d;
+        margin-bottom: 20px;
+    }
+
+    .student-info {
+        text-align: left;
+        border-top: 1px solid #ddd;
+        padding-top: 15px;
+    }
+
+    .student-info p {
+        margin-bottom: 10px;
+    }
+
+    .student-info strong {
+        display: inline-block;
+        width: 100px;
+    }
+
+    .id-footer {
+        background: #f8f9fa;
+        text-align: center;
+        padding: 15px;
+        border-top: 1px solid #ddd;
+    }
+
+    .print-button {
+        margin-top: 25px;
+    }
+
+    @media print {
+
+        body {
+            background: white !important;
+        }
+
+        nav,
+        footer,
+        .page-controls {
+            display: none !important;
+        }
+
+        .id-card-wrapper {
+            margin: 0;
+        }
+
+        .student-id-card {
+            box-shadow: none;
+            border: 1px solid #000;
+        }
+
+    }
+
+</style>
+
+
+<div class="container mt-4">
+
+    <!-- Page Header -->
+
+    <div class="page-controls text-center mb-4">
+
+        <h2 class="fw-bold">
+            Student ID Card
+        </h2>
+
+        <p class="text-muted">
+            Official student identification card
+        </p>
+
+    </div>
+
+
+    <!-- ID Card -->
+
+    <div class="id-card-wrapper">
+
+        <div class="student-id-card">
+
+
+            <!-- Header -->
+
+            <div class="id-header">
+
+                <h4>
+                    STUDENT MANAGEMENT PORTAL
+                </h4>
+
+                <small>
+                    STUDENT IDENTIFICATION CARD
+                </small>
 
             </div>
 
-            <div class="card-body">
+
+            <!-- Body -->
+
+            <div class="id-body">
+
+
+                <!-- Student Photo -->
 
                 {% if student.photo %}
 
                 <img
                     src="{{ url_for('static', filename='uploads/' + student.photo) }}"
-                    width="150"
-                    height="150"
-                    class="rounded-circle mb-3">
+                    class="student-photo"
+                    alt="Student Photo">
+
+                {% else %}
+
+                <div class="photo-placeholder">
+
+                    {{ student.first_name[0] }}{{ student.last_name[0] }}
+
+                </div>
 
                 {% endif %}
 
-                <h3>
+
+                <!-- Student Name -->
+
+                <h3 class="student-name">
 
                     {{ student.first_name }}
                     {{ student.last_name }}
 
                 </h3>
 
-                <hr>
 
-                <p>
-
-                    <strong>Student Number:</strong><br>
+                <p class="student-number">
 
                     {{ student.student_number }}
 
                 </p>
 
-                <p>
 
-                    <strong>Course</strong><br>
+                <!-- Student Information -->
 
-                    {{ student.course }}
+                <div class="student-info">
 
-                </p>
+                    <p>
 
-                <p>
+                        <strong>Course:</strong>
 
-                    <strong>Level</strong><br>
+                        {{ student.course }}
 
-                    {{ student.level }}
+                    </p>
 
-                </p>
 
-                <a
-                    onclick="window.print()"
-                    class="btn btn-success">
+                    <p>
 
-                    Print ID Card
+                        <strong>Level:</strong>
 
-                </a>
+                        {{ student.level }}
+
+                    </p>
+
+
+                    <p>
+
+                        <strong>Gender:</strong>
+
+                        {{ student.gender }}
+
+                    </p>
+
+
+                </div>
 
             </div>
 
+
+            <!-- Footer -->
+
+            <div class="id-footer">
+
+                <small class="text-muted">
+
+                    This card identifies the student as a registered
+                    member of the institution.
+
+                </small>
+
+            </div>
+
+
         </div>
+
+    </div>
+
+
+    <!-- Controls -->
+
+    <div class="page-controls text-center print-button">
+
+        <button
+            onclick="window.print()"
+            class="btn btn-success">
+
+            🖨 Print ID Card
+        </button>
+
+
+        <a
+            href="{{ url_for('main.student_details', id=student.id) }}"
+            class="btn btn-secondary ms-2">
+
+            ← Back to Profile
+
+        </a>
 
     </div>
 
