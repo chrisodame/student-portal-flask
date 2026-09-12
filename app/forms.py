@@ -4,8 +4,10 @@ from flask_wtf.file import FileField, FileAllowed
 from wtforms import (
     StringField,
     SelectField,
+    RadioField,
     DateField,
     TextAreaField,
+    IntegerField,
     SubmitField
 )
 
@@ -28,13 +30,13 @@ class StudentForm(FlaskForm):
         validators=[DataRequired()]
     )
 
-    gender = SelectField(
-        "Gender",
-        choices=[
-            ("Male", "Male"),
-            ("Female", "Female")
-        ],
-        validators=[DataRequired()]
+    gender = RadioField(
+    "Gender",
+    choices=[
+        ("Male", "Male"),
+        ("Female", "Female")
+    ],
+    validators=[DataRequired()]
     )
 
     date_of_birth = DateField(
@@ -58,14 +60,16 @@ class StudentForm(FlaskForm):
         validators=[DataRequired()]
     )
 
-    course = StringField(
+    course = SelectField(
         "Course",
+        choices=[],
         validators=[DataRequired()]
     )
 
     level = SelectField(
         "Level",
         choices=[
+            ("","Select Level"),
             ("100", "100"),
             ("200", "200"),
             ("300", "300"),
@@ -82,6 +86,21 @@ class StudentForm(FlaskForm):
     guardian_phone = StringField(
         "Guardian Phone",
         validators=[DataRequired()]
+    )
+
+    jamb_score = IntegerField(
+    "JAMB Score",
+    validators=[DataRequired()]
+    )
+
+    admission_status = SelectField(
+    "Admission Status",
+    choices=[
+        ("Undecided", "Undecided"),
+        ("Admitted", "Admitted"),
+        ("Not Admitted", "Not Admitted")
+    ],
+    validators=[DataRequired()]
     )
 
     photo = FileField(

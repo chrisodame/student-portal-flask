@@ -162,7 +162,6 @@
 
             </div>
 
-
             <h4 class="fw-bold mt-4 mb-3">
                 Academic Information
             </h4>
@@ -189,9 +188,57 @@
                         </td>
                     </tr>
 
+                    <tr>
+                        <th class="table-light">
+                            JAMB Score
+                        </th>
+                        <td>
+                            {{ student.jamb_score or "Not provided" }}
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <th class="table-light">
+                            Admission Status
+                        </th>
+                        <td>
+                            <form method="POST"
+                                action="{{ url_for('main.update_admission_status', id=student.id) }}"
+                            class="d-flex align-items-center gap-2">
+
+                            <select name="admission_status"
+                            class="form-select"
+                            style="max-width: 250px;">
+
+                            <option value="Undecided"
+                                {% if student.admission_status == "Undecided" %}selected{% endif %}>
+                                Undecided
+                            </option>
+
+                            <option value="Admitted"
+                                {% if student.admission_status == "Admitted" %}selected{% endif %}>
+                                Admitted
+                            </option>
+
+                            <option value="Not Admitted"
+                                {% if student.admission_status == "Not Admitted" %}selected{% endif %}>
+                                Not Admitted
+                            </option>
+
+                            </select>
+
+                            <button type="submit" class="btn btn-primary">
+                                Update
+                            </button>
+
+                            </form>
+                        </td>
+                    </tr>
+
                 </table>
 
             </div>
+        
 
 
             <h4 class="fw-bold mt-4 mb-3">

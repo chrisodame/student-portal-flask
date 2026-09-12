@@ -10,6 +10,33 @@ from flask import current_app
 main = Blueprint("main", __name__)
 
 
+courses_by_level = {
+    "100": [
+        "Computer Science",
+        "Software Engineering",
+        "Information Technology",
+        "Cyber Security"
+    ],
+    "200": [
+        "Computer Science",
+        "Software Engineering",
+        "Information Technology",
+        "Cyber Security"
+    ],
+    "300": [
+        "Computer Science",
+        "Software Engineering",
+        "Information Technology",
+        "Cyber Security"
+    ],
+    "400": [
+        "Computer Science",
+        "Software Engineering",
+        "Information Technology",
+        "Cyber Security"
+    ]
+}
+
 @main.route("/")
 def home():
 
@@ -73,6 +100,66 @@ def student_details(id):
     student = Student.query.get_or_404(id)
     return render_template("student_details.html", student=student)
 
+@main.route("/api/courses/<level>")
+def get_courses(level):
+
+    courses_by_level = {
+        "100": [
+            "Computer Science",
+            "Information Technology",
+            "Software Engineering",
+            "Cybersecurity"
+        ],
+        "200": [
+            "Computer Science",
+            "Information Technology",
+            "Software Engineering",
+            "Cybersecurity"
+        ],
+        "300": [
+            "Computer Science",
+            "Information Technology",
+            "Software Engineering",
+            "Cybersecurity"
+        ],
+        "400": [
+            "Computer Science",
+            "Information Technology",
+            "Software Engineering",
+            "Cybersecurity"
+        ]
+    }
+
+    courses = courses_by_level.get(level, [])
+
+    return {
+        "courses": courses
+    }
+
+@main.route("/students/<int:id>/admission-status", methods=["POST"])
+def update_admission_status(id):
+    student = Student.query.get_or_404(id)
+
+    admission_status = request.form.get("admission_status")
+
+    allowed_statuses = [
+        "Undecided",
+        "Admitted",
+        "Not Admitted"
+    ]
+
+    if admission_status not in allowed_statuses:
+        flash("Invalid admission status.", "danger")
+        return redirect(url_for("main.student_details", id=id))
+
+    student.admission_status = admission_status
+
+    db.session.commit()
+
+    flash("Admission status updated successfully!", "success")
+
+    return redirect(url_for("main.student_details", id=id))
+
 @main.route("/students/<int:id>/id-card")
 def student_id_card(id):
 
@@ -87,9 +174,109 @@ def student_id_card(id):
 def edit_student(id):
 
     student = Student.query.get_or_404(id)
-    form = StudentForm(obj=student)
+
+    form = StudentForm()
+
+    courses_by_level = {
+        "100": [
+            "Computer Science",
+            "Software Engineering",
+            "Information Technology"
+        ],
+        "200": [
+            "Computer Science",
+            "Software Engineering",
+            "Information Technology"
+        ],
+        "300": [
+            "Computer Science",
+            "Software Engineering",
+            "Information Technology"
+        ],
+        "400": [
+            "Computer Science",
+            "Software Engineering",
+            "Information Technology"
+        ]
+    }
+
+    # -----------------------------------
+    # LOAD EXISTING STUDENT DATA
+    # -----------------------------------
+
+    if request.method == "GET":
+
+        form.student_number.data = student.student_number
+        form.first_name.data = student.first_name
+        form.last_name.data = student.last_name
+        form.gender.data = student.gender
+        form.date_of_birth.data = student.date_of_birth
+        form.email.data = student.email
+        form.phone.data = student.phone
+        form.address.data = student.address
+        form.level.data = student.level
+        form.course.data = student.course
+        form.guardian_name.data = student.guardian_name
+        form.guardian_phone.data = student.guardian_phone
+        form.jamb_score.data = student.jamb_score
+        form.admission_status.data = student.admission_status
+
+    # -----------------------------------
+    # SET COURSE OPTIONS
+    # -----------------------------------
+
+    selected_level = form.level.data
+
+    course_choices = courses_by_level.get(
+        selected_level,
+        []
+    ).copy()
+
+    # Keep the student's existing course
+    # even if it is not currently in the list.
+    if student.course and student.course not in course_choices:
+        course_choices.append(student.course)
+
+    form.course.choices = [
+        (course, course)
+        for course in course_choices
+    ]
+
+    # -----------------------------------
+    # PROCESS FORM SUBMISSION
+    # -----------------------------------
 
     if form.validate_on_submit():
+
+        existing_student = Student.query.filter(
+            (
+                Student.student_number == form.student_number.data
+            )
+            |
+            (
+                Student.email == form.email.data
+            )
+        ).filter(
+            Student.id != student.id
+        ).first()
+
+        if existing_student:
+
+            flash(
+                "Student Number or Email already exists.",
+                "danger"
+            )
+
+            return redirect(
+                url_for(
+                    "main.edit_student",
+                    id=student.id
+                )
+            )
+
+        # -----------------------------------
+        # UPDATE STUDENT INFORMATION
+        # -----------------------------------
 
         student.student_number = form.student_number.data
         student.first_name = form.first_name.data
@@ -103,29 +290,61 @@ def edit_student(id):
         student.level = form.level.data
         student.guardian_name = form.guardian_name.data
         student.guardian_phone = form.guardian_phone.data
+        student.jamb_score = form.jamb_score.data
+        student.admission_status = form.admission_status.data
 
-        if form.photo.data:
+        # -----------------------------------
+        # UPDATE PHOTO ONLY IF NEW PHOTO
+        # IS ACTUALLY UPLOADED
+        # -----------------------------------
+
+        if form.photo.data and hasattr(
+            form.photo.data,
+            "filename"
+        ):
 
             photo = form.photo.data
 
-            filename = secure_filename(photo.filename)
+            filename = secure_filename(
+                photo.filename
+            )
 
             upload_folder = os.path.join(
                 current_app.static_folder,
                 "uploads"
             )
 
-            os.makedirs(upload_folder, exist_ok=True)
+            os.makedirs(
+                upload_folder,
+                exist_ok=True
+            )
 
-            photo.save(os.path.join(upload_folder, filename))
+            photo.save(
+                os.path.join(
+                    upload_folder,
+                    filename
+                )
+            )
 
             student.photo = filename
 
+        # -----------------------------------
+        # SAVE CHANGES
+        # -----------------------------------
+
         db.session.commit()
 
-        flash("Student updated successfully!", "success")
+        flash(
+            "Student updated successfully!",
+            "success"
+        )
 
-        return redirect(url_for("main.students"))
+        return redirect(
+            url_for(
+                "main.student_details",
+                id=student.id
+            )
+        )
 
     return render_template(
         "edit_student.html",
@@ -147,6 +366,39 @@ def delete_student(id):
 def add_student():
     form = StudentForm()
 
+    courses_by_level = {
+        "100": [
+            "Computer Science",
+            "Information Technology",
+            "Software Engineering",
+            "Cybersecurity"
+        ],
+        "200": [
+            "Computer Science",
+            "Information Technology",
+            "Software Engineering",
+            "Cybersecurity"
+        ],
+        "300": [
+            "Computer Science",
+            "Information Technology",
+            "Software Engineering",
+            "Cybersecurity"
+        ],
+        "400": [
+            "Computer Science",
+            "Information Technology",
+            "Software Engineering",
+            "Cybersecurity"
+        ]
+    }
+
+    if request.method == "POST":
+        form.course.choices = [
+            (course, course)
+            for course in courses_by_level.get(form.level.data, [])
+        ]
+
     if form.validate_on_submit():
 
         existing_student = Student.query.filter(
@@ -157,7 +409,7 @@ def add_student():
         if existing_student:
             flash("Student Number or Email already exists.", "danger")
             return redirect(url_for("main.add_student"))
-        
+
         filename = None
 
         if form.photo.data:
@@ -166,8 +418,8 @@ def add_student():
 
             file.save(
                 os.path.join(
-            current_app.config["UPLOAD_FOLDER"],
-            filename
+                    current_app.config["UPLOAD_FOLDER"],
+                    filename
                 )
             )
 
@@ -184,8 +436,9 @@ def add_student():
             level=form.level.data,
             guardian_name=form.guardian_name.data,
             guardian_phone=form.guardian_phone.data,
-             
-             photo=filename
+            jamb_score=form.jamb_score.data,
+            admission_status=form.admission_status.data,
+            photo=filename
         )
 
         db.session.add(student)
@@ -195,5 +448,3 @@ def add_student():
         return redirect(url_for("main.students"))
 
     return render_template("add_student.html", form=form)
-
-   

@@ -86,14 +86,19 @@
                     </div>
 
 
+                    
                     <div class="col-md-6 mb-3">
 
-                        {{ form.gender.label(class="form-label fw-semibold") }}
+                        {{ form.gender.label(class="form-label fw-semibold d-block") }}
 
-                        {{ form.gender(class="form-select") }}
+                       {% for option in form.gender %}
+                        <div class="form-check form-check-inline">
+                            {{ option(class="form-check-input") }}
+                            {{ option.label(class="form-check-label") }}
+                        </div>
+                        {% endfor %}
 
                     </div>
-
 
                     <div class="col-md-6 mb-3">
 
@@ -172,9 +177,13 @@
                         {{ form.course.label(class="form-label fw-semibold") }}
 
                         {{ form.course(
-                            class="form-control",
-                            placeholder="Enter course"
+                        class="form-select",
+                        id="course"
                         ) }}
+
+                        <div class="form-text">
+                            Select a level first to load available courses.
+                        </div>
 
                     </div>
 
@@ -183,9 +192,39 @@
 
                         {{ form.level.label(class="form-label fw-semibold") }}
 
-                        {{ form.level(class="form-select") }}
+                        {{ form.level(
+                            class="form-select",
+                            id="level"
+                        ) }}
 
                     </div>
+
+                    <div class="col-md-6 mb-3">
+
+                        {{ form.jamb_score.label(class="form-label fw-semibold") }}
+
+                        {{ form.jamb_score(
+                            class="form-control",
+                            placeholder="Enter JAMB score",
+                            min="0",
+                            max="400"
+                        ) }}
+
+                        <div class="form-text">
+                            Enter a JAMB score between 0 and 400.
+                        </div>
+
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+
+                        {{ form.admission_status.label(class="form-label fw-semibold") }}
+
+                        {{ form.admission_status(
+                            class="form-select"
+                        ) }}
+
+                     </div>
 
                 </div>
 
@@ -274,5 +313,7 @@
     </div>
 
 </div>
+
+<script src="{{ url_for('static', filename='js/student_form.js') }}"></script>
 
 {% endblock %}
